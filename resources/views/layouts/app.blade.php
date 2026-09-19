@@ -27,14 +27,14 @@
 
 <footer class="site-footer">
     <div><strong>India Uncaged</strong><br><span>Wildlife journeys, thoughtfully made.</span></div>
-    <div>{{ config('indiauncaged.contact_email') }}</div>
+    <div>{{ $site::get('contact_email') }}</div>
 </footer>
 
 <div class="contact-widget" aria-label="India Uncaged contact options">
-    <a class="contact-widget__whatsapp" href="https://wa.me/{{ config('indiauncaged.whatsapp_number') }}" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="contact-widget__whatsapp" href="https://wa.me/{{ $site::get('whatsapp_number') }}" target="_blank" rel="noopener">WhatsApp</a>
     <div class="contact-widget__panel">
-        <a href="tel:+91{{ config('indiauncaged.phone_primary') }}">Call {{ config('indiauncaged.phone_primary') }}</a>
-        <a href="tel:+91{{ $site::get('phone_secondary') }}">Call {{ config('indiauncaged.phone_secondary') }}</a>
+        <a href="tel:+91{{ $site::get('phone_primary') }}">Call {{ config('indiauncaged.phone_primary') }}</a>
+        <a href="tel:+91{{ $site::get('phone_secondary') }}">Call {{ $site::get('phone_secondary') }}</a>
         <a href="mailto:{{ config('indiauncaged.contact_email') }}">Email us</a>
         <a href="https://instagram.com/{{ ltrim(config('indiauncaged.instagram_handle'), '@') }}" target="_blank" rel="noopener">Instagram</a>
     </div>
