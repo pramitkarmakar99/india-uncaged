@@ -8,6 +8,8 @@ use App\\Http\\Controllers\\Admin\\DestinationController;
 use App\\Http\\Controllers\\Admin\\TourController;
 use App\\Http\\Controllers\\Admin\\TourDateController;
 use App\\Http\\Controllers\\Admin\\SiteSettingController;
+use App\\Http\\Controllers\\Admin\\JournalController;
+use App\\Http\\Controllers\\Admin\\GalleryController;
 use App\\Http\\Controllers\\Admin\\EnquiryController;
 use Illuminate\\Support\\Facades\\Route;
 
@@ -40,4 +42,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('/tours/{tour}/archive', [TourController::class, 'archive'])->name('tours.archive');
     Route::resource('tour-dates', TourDateController::class)->except(['show']);
     Route::resource('enquiries', EnquiryController::class)->only(['index','edit','update']);
+    Route::resource('journal', JournalController::class)->except(['show']);
+    Route::resource('gallery', GalleryController::class)->except(['show']);
+    Route::get('/settings', [SiteSettingController::class,'edit'])->name('settings.edit');
+    Route::post('/settings', [SiteSettingController::class,'update'])->name('settings.update');
 });
