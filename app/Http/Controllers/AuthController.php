@@ -21,7 +21,9 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt(array_merge($credentials, ['role' => ['owner', 'admin']]))) {
+        $user = \App\Models\User::where('email', $credentials['email'])->whereIn('role', ['owner', 'admin'])->first();
+
+        if (! $user || ! Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
             return back()->withErrors(['email' => 'The provided credentials are incorrect.'])->onlyInput('email');
         }
 
