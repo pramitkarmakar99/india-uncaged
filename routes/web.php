@@ -1,10 +1,10 @@
 <?php
-
+use App\\Http\\Controllers\\PublicSiteController;
 use Illuminate\\Support\\Facades\\Route;
 
-Route::view('/', 'home')->name('home');
-Route::view('/destinations', 'destinations.index')->name('destinations');
-Route::view('/tours', 'tours.index')->name('tours');
+Route::get('/', [PublicSiteController::class,'home'])->name('home');
+Route::get('/destinations', [PublicSiteController::class,'destinations'])->name('destinations');
+Route::get('/tours', [PublicSiteController::class,'tours'])->name('tours');
 Route::view('/gallery', 'gallery')->name('gallery');
 Route::view('/journal', 'journal.index')->name('journal');
 Route::view('/about', 'about')->name('about');
