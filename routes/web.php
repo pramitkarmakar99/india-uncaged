@@ -14,7 +14,7 @@ Route::get('/destinations', [PublicSiteController::class,'destinations'])->name(
 Route::get('/destinations/{destination:slug}', [PublicSiteController::class,'destination'])->name('destinations.show');
 Route::get('/tours', [PublicSiteController::class,'tours'])->name('tours');
 Route::get('/tours/{tour:slug}', [PublicSiteController::class,'tour'])->name('tours.show');
-Route::view('/gallery', 'gallery')->name('gallery');
+Route::get('/gallery', [PublicSiteController::class,'gallery'])->name('gallery');
 Route::view('/journal', 'journal.index')->name('journal');
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
