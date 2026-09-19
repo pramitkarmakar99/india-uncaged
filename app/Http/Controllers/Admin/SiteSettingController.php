@@ -15,6 +15,7 @@ class SiteSettingController extends Controller
         'branding'=>['horizontal_logo','square_logo','favicon','social_preview','default_seo_image'],
         'hero'=>['hero_video','hero_poster','hero_headline','hero_subheadline','hero_primary_label','hero_primary_url','hero_secondary_label','hero_secondary_url'],
         'social'=>['instagram_embed_code'],
+        'about'=>['about_headline','about_intro','about_story','about_approach','about_responsible_headline','about_responsible_text','about_team_headline','team_1_name','team_1_role','team_1_bio','team_1_image','team_2_name','team_2_role','team_2_bio','team_2_image','team_3_name','team_3_role','team_3_bio','team_3_image'],
     ];
 
     public function edit(): View
