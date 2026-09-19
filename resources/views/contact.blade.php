@@ -1,5 +1,9 @@
 @extends('layouts.app')
 @section('title','Contact — India Uncaged')
 @section('content')
-<section class="page-intro"><p class="eyebrow">CONTACT</p><h1>Start planning your journey.</h1><p>Use the planning form or contact us directly.</p></section>
+<section class="page-intro"><p class="eyebrow">CONTACT</p><h1>Start planning your journey.</h1><p>For a quick conversation, WhatsApp us. For a detailed request, use the planning form.</p></section>
+<section class="contact-layout">
+<div><p class="eyebrow">DIRECT</p><div class="contact-list"><a href="https://wa.me/{{ config('indiauncaged.whatsapp_number') }}" target="_blank" rel="noopener">WhatsApp · {{ config('indiauncaged.whatsapp_number') }}</a><a href="tel:+91{{ config('indiauncaged.phone_primary') }}">+91 {{ config('indiauncaged.phone_primary') }}</a><a href="tel:+91{{ config('indiauncaged.phone_secondary') }}">+91 {{ config('indiauncaged.phone_secondary') }}</a><a href="mailto:{{ config('indiauncaged.contact_email') }}">{{ config('indiauncaged.contact_email') }}</a><a href="https://instagram.com/{{ ltrim(config('indiauncaged.instagram_handle'),'@') }}" target="_blank" rel="noopener">{{ config('indiauncaged.instagram_handle') }}</a></div></div>
+<div><p class="eyebrow">ENQUIRE</p><form method="POST" action="{{ route('contact.store') }}" class="public-form">@csrf<input type="hidden" name="source" value="contact"><div class="form-grid form-grid--2"><label>Name *<input name="name" required></label><label>WhatsApp Number *<input name="whatsapp" required></label><label>Email<input type="email" name="email"></label><label>Destination<input name="destination"></label></div><label>Message<textarea name="message" rows="7"></textarea></label><button class="button button--primary">SEND ENQUIRY</button></form></div>
+</section>
 @endsection
