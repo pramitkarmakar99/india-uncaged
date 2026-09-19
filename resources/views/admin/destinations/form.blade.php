@@ -55,9 +55,6 @@
 
         <div class="admin-actions">
             <button class="button button--primary" type="submit">{{ $destination->exists ? 'Save changes' : 'Create destination' }}</button>
-            @if($destination->exists)
-                <form></form>
-            @endif
         </div>
     </form>
 
