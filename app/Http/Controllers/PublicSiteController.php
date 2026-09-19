@@ -1,18 +1,24 @@
 <?php
-namespace App\\Http\\Controllers;
-use App\\Models\\Destination;
-use App\\Models\\Tour;
-use App\\Models\\TourDate;
-use App\\Models\\GalleryImage;
-use Illuminate\\View\\View;
-use Illuminate\\Http\\Request;
+namespace App\Http\Controllers;
+
+use App\Models\Destination;
+use App\Models\Tour;
+use App\Models\TourDate;
+use App\Models\GalleryImage;
+use App\Models\JournalArticle;
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+
 class PublicSiteController extends Controller {
  public function home(): View {
   $upcoming=TourDate::query()->with(['tour.destination'])->where('published',true)->where('start_date','>=',today())->whereHas('tour',fn($q)=>$q->where('published',true)->whereNull('archived_at'))->orderBy('start_date')->get();
   $featured=TourDate::query()->with(['tour.destination'])->where('published',true)->where('start_date','>=',today())->whereHas('tour',fn($q)=>$q->where('published',true)->where('featured',true)->whereNull('archived_at'))->orderBy('start_date')->get();
   $featuredIds=$featured->pluck('id');
   $rest=$upcoming->reject(fn($d)=>$featuredIds->contains($d->id))->shuffle();
-  return view('home',compact('featured','rest'));
+  $gallery=GalleryImage::where('published',true)->where('featured',true)->latest()->limit(8)->get();
+  $destinations=Destination::where('published',true)->whereNull('archived_at')->where('featured',true)->orderBy('name')->limit(6)->get();
+  $journal=JournalArticle::where('published',true)->orderByDesc('published_at')->limit(3)->get();
+  return view('home',compact('featured','rest','gallery','destinations','journal'));
  }
  public function destinations(): View { return view('destinations.index',['destinations'=>Destination::where('published',true)->whereNull('archived_at')->withCount(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')])->orderBy('state_region')->orderBy('name')->get()]); }
  public function destination(Destination $destination): View {
