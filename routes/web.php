@@ -2,6 +2,7 @@
 use App\\Http\\Controllers\\PublicSiteController;
 use App\\Http\\Controllers\\AuthController;
 use App\\Http\\Controllers\\EnquiryController;
+use App\\Http\\Controllers\\JournalController;
 use App\\Http\\Controllers\\Admin\\DashboardController;
 use App\\Http\\Controllers\\Admin\\DestinationController;
 use App\\Http\\Controllers\\Admin\\TourController;
@@ -15,7 +16,8 @@ Route::get('/destinations/{destination:slug}', [PublicSiteController::class,'des
 Route::get('/tours', [PublicSiteController::class,'tours'])->name('tours');
 Route::get('/tours/{tour:slug}', [PublicSiteController::class,'tour'])->name('tours.show');
 Route::get('/gallery', [PublicSiteController::class,'gallery'])->name('gallery');
-Route::view('/journal', 'journal.index')->name('journal');
+Route::get('/journal', [JournalController::class,'index'])->name('journal');
+Route::get('/journal/{article:slug}', [JournalController::class,'show'])->name('journal.show');
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 Route::get('/plan-your-journey', [EnquiryController::class, 'create'])->name('plan');
