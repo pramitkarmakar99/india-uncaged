@@ -8,31 +8,35 @@
     @vite(['resources/css/app.css'])
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" href="{{ route('home') }}">INDIA UNCAGED</a>
-        <nav>
-            <a href="{{ route('home') }}">Home</a>
-            <a href="{{ route('destinations') }}">Destinations</a>
-            <a href="{{ route('tours') }}">Upcoming Tours</a>
-            <a href="{{ route('gallery') }}">Gallery</a>
-            <a href="{{ route('journal') }}">Journal</a>
-            <a href="{{ route('about') }}">About Us</a>
-            <a href="{{ route('contact') }}">Contact</a>
-        </nav>
-        <a class="nav-cta" href="{{ route('plan') }}">PLAN YOUR JOURNEY</a>
-    </header>
+<header class="site-header">
+    <a class="brand" href="{{ route('home') }}">INDIA UNCAGED</a>
+    <nav aria-label="Primary navigation">
+        <a href="{{ route('home') }}">Home</a>
+        <a href="{{ route('destinations') }}">Destinations</a>
+        <a href="{{ route('tours') }}">Upcoming Tours</a>
+        <a href="{{ route('gallery') }}">Gallery</a>
+        <a href="{{ route('journal') }}">Journal</a>
+        <a href="{{ route('about') }}">About Us</a>
+        <a href="{{ route('contact') }}">Contact</a>
+    </nav>
+    <a class="nav-cta" href="{{ route('plan') }}">PLAN YOUR JOURNEY</a>
+</header>
 
-    <main>@yield('content')</main>
+<main>@yield('content')</main>
 
-    <footer class="site-footer">
-        <div>India Uncaged</div>
-        <div>Crafting journeys into the wild.</div>
-    </footer>
+<footer class="site-footer">
+    <div><strong>India Uncaged</strong><br><span>Wildlife journeys, thoughtfully made.</span></div>
+    <div>{{ config('indiauncaged.contact_email') }}</div>
+</footer>
 
-    <a class="whatsapp-float"
-       href="https://wa.me/{{ config('indiauncaged.whatsapp_number') }}"
-       target="_blank"
-       rel="noopener"
-       aria-label="Chat with India Uncaged on WhatsApp">WhatsApp</a>
+<div class="contact-widget" aria-label="India Uncaged contact options">
+    <a class="contact-widget__whatsapp" href="https://wa.me/{{ config('indiauncaged.whatsapp_number') }}" target="_blank" rel="noopener">WhatsApp</a>
+    <div class="contact-widget__panel">
+        <a href="tel:+91{{ config('indiauncaged.phone_primary') }}">Call {{ config('indiauncaged.phone_primary') }}</a>
+        <a href="tel:+91{{ config('indiauncaged.phone_secondary') }}">Call {{ config('indiauncaged.phone_secondary') }}</a>
+        <a href="mailto:{{ config('indiauncaged.contact_email') }}">Email us</a>
+        <a href="https://instagram.com/{{ ltrim(config('indiauncaged.instagram_handle'), '@') }}" target="_blank" rel="noopener">Instagram</a>
+    </div>
+</div>
 </body>
 </html>
