@@ -9,7 +9,9 @@ use Illuminate\\Support\\Facades\\Route;
 
 Route::get('/', [PublicSiteController::class,'home'])->name('home');
 Route::get('/destinations', [PublicSiteController::class,'destinations'])->name('destinations');
+Route::get('/destinations/{destination:slug}', [PublicSiteController::class,'destination'])->name('destinations.show');
 Route::get('/tours', [PublicSiteController::class,'tours'])->name('tours');
+Route::get('/tours/{tour:slug}', [PublicSiteController::class,'tour'])->name('tours.show');
 Route::view('/gallery', 'gallery')->name('gallery');
 Route::view('/journal', 'journal.index')->name('journal');
 Route::view('/about', 'about')->name('about');
