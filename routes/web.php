@@ -1,6 +1,7 @@
 <?php
 use App\\Http\\Controllers\\PublicSiteController;
 use App\\Http\\Controllers\\AuthController;
+use App\\Http\\Controllers\\EnquiryController;
 use App\\Http\\Controllers\\Admin\\DashboardController;
 use App\\Http\\Controllers\\Admin\\DestinationController;
 use App\\Http\\Controllers\\Admin\\TourController;
@@ -16,7 +17,9 @@ Route::view('/gallery', 'gallery')->name('gallery');
 Route::view('/journal', 'journal.index')->name('journal');
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
-Route::view('/plan-your-journey', 'plan')->name('plan');
+Route::get('/plan-your-journey', [EnquiryController::class, 'create'])->name('plan');
+Route::post('/plan-your-journey', [EnquiryController::class, 'store'])->name('plan.store');
+Route::post('/contact', [EnquiryController::class, 'store'])->name('contact.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
