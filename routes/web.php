@@ -2,6 +2,7 @@
 use App\\Http\\Controllers\\PublicSiteController;
 use App\\Http\\Controllers\\AuthController;
 use App\\Http\\Controllers\\Admin\\DashboardController;
+use App\\Http\\Controllers\\Admin\\DestinationController;
 use Illuminate\\Support\\Facades\\Route;
 
 Route::get('/', [PublicSiteController::class,'home'])->name('home');
@@ -22,4 +23,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('destinations', DestinationController::class)->except(['show']);
+    Route::patch('/destinations/{destination}/archive', [DestinationController::class, 'archive'])->name('destinations.archive');
 });
