@@ -7,6 +7,7 @@ use App\\Http\\Controllers\\Admin\\DashboardController;
 use App\\Http\\Controllers\\Admin\\DestinationController;
 use App\\Http\\Controllers\\Admin\\TourController;
 use App\\Http\\Controllers\\Admin\\TourDateController;
+use App\\Http\\Controllers\\Admin\\SiteSettingController;
 use App\\Http\\Controllers\\Admin\\EnquiryController;
 use Illuminate\\Support\\Facades\\Route;
 
