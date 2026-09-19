@@ -31,10 +31,23 @@ class PublicSiteController extends Controller {
   if($request->filled('category')) $query->where('category',$request->query('category'));
   return view('gallery',['images'=>$query->get()]);
  }
- public function tours(): View { return view('tours.index',['dates'=>TourDate::with(['tour.destination'])->where('published',true)->where('start_date','>=',today())->whereHas('tour',fn($q)=>$q->where('published',true)->whereNull('archived_at'))->orderBy('start_date')->get()]); }
- public function tour(Tour $tour): View {
-  abort_unless($tour->published && !$tour->archived_at && $tour->destination?->published && !$tour->destination?->archived_at, 404);
-  $tour->load(['destination','images','itineraryDays','inclusions','exclusions','dates'=>fn($q)=>$q->where('published',true)->where('start_date','>=',today())->orderBy('start_date')]);
-  return view('tours.show', compact('tour'));
+ public function tours(Request $request): View {
+  $query=TourDate::with(['tour.destination'])
+   ->where('published',true)->where('start_date','>=',today())
+   ->whereHas('tour',fn($q)=>$q->where('published',true)->whereNull('archived_at'));
+  if($request->filled('destination')) $query->whereHas('tour',fn($q)=>$q->where('destination_id',$request->query('destination')));
+  if($request->filled('month')) { $month=(int)$request->query('month'); $query->whereMonth('start_date',$month); }
+  if($request->filled('wildlife')) $query->whereHas('tour.destination',fn($q)=>$q->whereJsonContains('wildlife',$request->query('wildlife')));
+  if($request->filled('experience')) $query->whereHas('tour.destination',fn($q)=>$q->whereJsonContains('experiences',$request->query('experience')));
+  match($request->query('sort','soonest')) {
+   'price'=>$query->orderByRaw('COALESCE(price, 999999999) asc')->orderBy('start_date'),
+   'destination'=>$query->join('tours as filter_tours','tour_dates.tour_id','=','filter_tours.id')->join('destinations as filter_destinations','filter_tours.destination_id','=','filter_destinations.id')->orderBy('filter_destinations.name')->orderBy('tour_dates.start_date'),
+   default=>$query->orderBy('start_date'),
+  };
+  $dates=$query->get();
+  $destinations=Destination::where('published',true)->whereNull('archived_at')->orderBy('name')->get();
+  $wildlife=Destination::where('published',true)->whereNull('archived_at')->get()->pluck('wildlife')->flatten()->filter()->unique()->sort()->values();
+  $experiences=Destination::where('published',true)->whereNull('archived_at')->get()->pluck('experiences')->flatten()->filter()->unique()->sort()->values();
+  return view('tours.index',compact('dates','destinations','wildlife','experiences'));
  }
 }
