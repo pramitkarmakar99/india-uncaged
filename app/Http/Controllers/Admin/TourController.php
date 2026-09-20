@@ -66,10 +66,10 @@ class TourController extends Controller
             'base_price' => ['nullable', 'numeric', 'min:0'],
             'group_size' => ['nullable', 'integer', 'min:1'],
             'safari_count' => ['nullable', 'integer', 'min:0'],
-            'hero_image' => ['nullable', 'string', 'max:2048'],
+            'hero_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],
-            'seo_image' => ['nullable', 'string', 'max:2048'],
+            'seo_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
             'featured' => ['nullable', 'boolean'],
             'published' => ['nullable', 'boolean'],
             'itinerary' => ['nullable', 'array'],
@@ -80,9 +80,11 @@ class TourController extends Controller
             'exclusions' => ['nullable', 'array'],
             'exclusions.*' => ['nullable', 'string', 'max:1000'],
             'gallery' => ['nullable', 'array'],
-            'gallery.*.image_path' => ['nullable', 'string', 'max:2048'],
+            'gallery.*.image_path' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
             'gallery.*.caption' => ['nullable', 'string'],
         ]);
+
+        abort_unless(Destination::whereKey($data['destination_id'])->whereNull('archived_at')->exists(), 422, 'The selected destination is archived or invalid.');
 
         $slug = Str::slug($data['slug'] ?: $data['name']);
         if (Tour::where('slug',$slug)->whereKeyNot($tour->id ?? 0)->exists()) $slug .= '-' . Str::lower(Str::random(5));
