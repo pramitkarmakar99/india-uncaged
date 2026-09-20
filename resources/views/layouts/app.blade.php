@@ -4,6 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'India Uncaged')</title>
+    <meta name="robots" content="@yield('robots', 'index,follow')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    @if($site::get('favicon'))<link rel="icon" href="{{ $site::get('favicon') }}">@endif
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: 'India Uncaged')">
+    <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Premium wildlife journeys across India.')">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    @if($site::get('social_preview') ?: $site::get('default_seo_image'))<meta property="og:image" content="{{ $site::get('social_preview') ?: $site::get('default_seo_image') }}">@endif
+    <meta name="twitter:card" content="summary_large_image">
 @php($site=app(\App\Support\SiteSettings::class))
     <meta name="description" content="@yield('description', 'Premium wildlife journeys across India.')">
     @vite(['resources/css/app.css'])
