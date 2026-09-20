@@ -68,6 +68,8 @@ class DestinationController extends Controller
             'seo_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
             'featured' => ['nullable', 'boolean'],
             'published' => ['nullable', 'boolean'],
+            'gallery_ids' => ['nullable', 'array'],
+            'gallery_ids.*' => ['integer', 'exists:gallery_images,id'],
         ]);
 
         $slug = Str::slug($data['slug'] ?: $data['name']);
