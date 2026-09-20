@@ -89,7 +89,11 @@ class DestinationController extends Controller
         $data['experiences'] = $this->linesToArray($data['experiences'] ?? null);
         $data['featured'] = $request->boolean('featured');
         $data['published'] = $request->boolean('published');
+        $galleryIds = $data['gallery_ids'] ?? [];
+        unset($data['gallery_ids']);
+
         $destination->fill($data)->save();
+        $destination->galleryImages()->sync(array_values(array_unique($galleryIds)));
     }
 
     private function linesToArray(?string $value): array
