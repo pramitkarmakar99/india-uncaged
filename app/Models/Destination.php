@@ -6,5 +6,5 @@ class Destination extends Model {
  protected $guarded=[];
  protected $casts=['wildlife'=>'array','experiences'=>'array','featured'=>'boolean','published'=>'boolean'];
  public function tours(): HasMany { return $this->hasMany(Tour::class); }
- public function galleryImages(){ return $this->belongsToMany(GalleryImage::class,'destination_gallery_images')->withPivot('sort_order')->orderBy('pivot_sort_order'); }
+ public function galleryImages(){ return $this->belongsToMany(GalleryImage::class,'destination_gallery_images')->withPivot('sort_order')->orderByPivot('sort_order'); }
 }
