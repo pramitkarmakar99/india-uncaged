@@ -1,8 +1,15 @@
 /vendor/
+node_modules/
 /.env
-/.env.backup
+/.env.*
+!/.env.example
 /.phpunit.result.cache
 /storage/*.key
 /storage/app/public/
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/bootstrap/cache/*
 /public/build/
 /public/hot
