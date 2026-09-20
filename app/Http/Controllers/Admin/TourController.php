@@ -84,7 +84,11 @@ class TourController extends Controller
             'gallery.*.caption' => ['nullable', 'string'],
         ]);
 
-        abort_unless(Destination::whereKey($data['destination_id'])->whereNull('archived_at')->exists(), 422, 'The selected destination is archived or invalid.');
+        $destination = Destination::whereKey($data['destination_id'])->whereNull('archived_at')->first();
+        abort_unless($destination, 422, 'The selected destination is archived or invalid.');
+        if ($request->boolean('published') && ! $destination->published) {
+            abort(422, 'A tour cannot be published while its destination is unpublished.');
+        }
 
         $slug = Str::slug($data['slug'] ?: $data['name']);
         if (Tour::where('slug',$slug)->whereKeyNot($tour->id ?? 0)->exists()) $slug .= '-' . Str::lower(Str::random(5));
