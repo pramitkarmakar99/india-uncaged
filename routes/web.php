@@ -14,6 +14,8 @@ use App\\Http\\Controllers\\Admin\\EnquiryController;
 use Illuminate\\Support\\Facades\\Route;
 
 Route::get('/', [PublicSiteController::class,'home'])->name('home');
+Route::get('/sitemap.xml', [PublicSiteController::class,'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [PublicSiteController::class,'robots'])->name('robots');
 Route::get('/destinations', [PublicSiteController::class,'destinations'])->name('destinations');
 Route::get('/destinations/{destination:slug}', [PublicSiteController::class,'destination'])->name('destinations.show');
 Route::get('/tours', [PublicSiteController::class,'tours'])->name('tours');
