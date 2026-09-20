@@ -42,6 +42,7 @@ class EnquiryController extends Controller
         $data['source'] = $data['source'] ?? 'plan';
         Enquiry::create($data);
 
-        return redirect()->route('plan')->with('success', 'Thank you. Your enquiry has been received. We will get in touch shortly.');
+        $redirect = $data['source'] === 'contact' ? 'contact' : 'plan';
+        return redirect()->route($redirect)->with('success', 'Thank you. Your enquiry has been received. We will get in touch shortly.');
     }
 }
