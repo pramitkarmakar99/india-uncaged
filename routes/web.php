@@ -27,12 +27,12 @@ Route::get('/journal/{article:slug}', [JournalController::class,'show'])->name('
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 Route::get('/plan-your-journey', [EnquiryController::class, 'create'])->name('plan');
-Route::post('/plan-your-journey', [EnquiryController::class, 'store'])->name('plan.store');
-Route::post('/contact', [EnquiryController::class, 'store'])->name('contact.store');
+Route::post('/plan-your-journey', [EnquiryController::class, 'store'])->middleware('throttle:10,1')->name('plan.store');
+Route::post('/contact', [EnquiryController::class, 'store'])->middleware('throttle:10,1')->name('contact.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
