@@ -37,6 +37,21 @@ class SiteSettingController extends Controller
         $keys=array_merge(...array_values($this->groups));
         $rules=[];
         foreach($keys as $key) $rules[$key]=['nullable','string','max:10000'];
+
+        foreach (['instagram_url','facebook_url','youtube_url','google_maps_url','hero_video','hero_poster','horizontal_logo','square_logo','favicon','social_preview','default_seo_image','team_1_image','team_2_image','team_3_image'] as $key) {
+            $rules[$key][] = 'max:2048';
+            $rules[$key][] = 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i';
+        }
+
+        foreach (['hero_primary_url','hero_secondary_url'] as $key) {
+            $rules[$key][] = 'max:2048';
+            $rules[$key][] = 'regex:/^(https?:\\/\\/|\\/[^\\/]|[^\\s]+$)/i';
+        }
+
+        $rules['contact_email'] = ['nullable','email','max:255'];
+        $rules['whatsapp_number'] = ['nullable','string','max:30','regex:/^[+0-9 ()-]+$/'];
+        $rules['phone_primary'] = ['nullable','string','max:30','regex:/^[+0-9 ()-]+$/'];
+        $rules['phone_secondary'] = ['nullable','string','max:30','regex:/^[+0-9 ()-]+$/'];
         $data=$request->validate($rules);
         foreach($keys as $key) SiteSetting::updateOrCreate(['key'=>$key],['value'=>$data[$key] ?? null]);
         return back()->with('success','Site settings updated.');
