@@ -24,16 +24,33 @@
 <div class="form-grid form-grid--2"><label>Base / reference price<input type="number" step="0.01" min="0" name="base_price" value="{{ old('base_price',$tour->base_price) }}"></label><label>Group size<input type="number" min="1" name="group_size" value="{{ old('group_size',$tour->group_size) }}"></label><label>Safari count<input type="number" min="0" name="safari_count" value="{{ old('safari_count',$tour->safari_count) }}"></label></div>
 </div>
 
+@php
+    $oldItinerary = old('itinerary');
+    $oldInclusions = old('inclusions');
+    $oldExclusions = old('exclusions');
+    $oldGallery = old('gallery');
+    $itineraryRows = is_array($oldItinerary)
+        ? $oldItinerary
+        : $tour->itineraryDays->map(fn($day) => ['title' => $day->title, 'description' => $day->description])->all();
+    $inclusionRows = is_array($oldInclusions) ? $oldInclusions : $tour->inclusions->pluck('text')->all();
+    $exclusionRows = is_array($oldExclusions) ? $oldExclusions : $tour->exclusions->pluck('text')->all();
+    $galleryRows = is_array($oldGallery)
+        ? $oldGallery
+        : $tour->images->map(fn($image) => ['image_path' => $image->image_path, 'caption' => $image->caption])->all();
+@endphp
+
 <div class="form-section"><p class="eyebrow">Itinerary</p><p class="field-help">Add as many days as required. Empty rows are ignored.</p><div id="itinerary-list">
-@forelse($tour->itineraryDays as $i=>$day)<div class="repeat-row"><strong>Day {{ $i+1 }}</strong><input name="itinerary[{{ $i }}][title]" value="{{ $day->title }}" placeholder="Day title"><textarea name="itinerary[{{ $i }}][description]" rows="3" placeholder="Day description">{{ $day->description }}</textarea></div>@empty
+@if(count($itineraryRows))
+@foreach($itineraryRows as $i=>$day)<div class="repeat-row"><strong>Day {{ $i+1 }}</strong><input name="itinerary[{{ $i }}][title]" value="{{ $day['title'] ?? '' }}" placeholder="Day title"><textarea name="itinerary[{{ $i }}][description]" rows="3" placeholder="Day description">{{ $day['description'] ?? '' }}</textarea></div>@endforeach
+@else
 <div class="repeat-row"><strong>Day 1</strong><input name="itinerary[0][title]" placeholder="Day title"><textarea name="itinerary[0][description]" rows="3" placeholder="Day description"></textarea></div>
-@endforelse
+@endif
 </div><button type="button" class="button" onclick="addItinerary()">+ Add day</button></div>
 
-<div class="form-section"><p class="eyebrow">Inclusions</p><div id="inclusions-list">@foreach($tour->inclusions as $i=>$item)<input name="inclusions[{{ $i }}]" value="{{ $item->text }}">@endforeach</div><button type="button" class="button" onclick="addLine('inclusions-list','inclusions')">+ Add inclusion</button></div>
-<div class="form-section"><p class="eyebrow">Exclusions</p><div id="exclusions-list">@foreach($tour->exclusions as $i=>$item)<input name="exclusions[{{ $i }}]" value="{{ $item->text }}">@endforeach</div><button type="button" class="button" onclick="addLine('exclusions-list','exclusions')">+ Add exclusion</button></div>
+<div class="form-section"><p class="eyebrow">Inclusions</p><div id="inclusions-list">@foreach($inclusionRows as $i=>$item)<input name="inclusions[{{ $i }}]" value="{{ $item }}">@endforeach</div><button type="button" class="button" onclick="addLine('inclusions-list','inclusions')">+ Add inclusion</button></div>
+<div class="form-section"><p class="eyebrow">Exclusions</p><div id="exclusions-list">@foreach($exclusionRows as $i=>$item)<input name="exclusions[{{ $i }}]" value="{{ $item }}">@endforeach</div><button type="button" class="button" onclick="addLine('exclusions-list','exclusions')">+ Add exclusion</button></div>
 
-<div class="form-section"><p class="eyebrow">Tour gallery</p><div id="gallery-list">@foreach($tour->images as $i=>$image)<div class="repeat-row"><input name="gallery[{{ $i }}][image_path]" value="{{ $image->image_path }}" placeholder="Image path / URL"><input name="gallery[{{ $i }}][caption]" value="{{ $image->caption }}" placeholder="Caption"></div>@endforeach</div><button type="button" class="button" onclick="addGallery()">+ Add image</button></div>
+<div class="form-section"><p class="eyebrow">Tour gallery</p><div id="gallery-list">@foreach($galleryRows as $i=>$image)<div class="repeat-row"><input name="gallery[{{ $i }}][image_path]" value="{{ $image['image_path'] ?? '' }}" placeholder="Image path / URL"><input name="gallery[{{ $i }}][caption]" value="{{ $image['caption'] ?? '' }}" placeholder="Caption"></div>@endforeach</div><button type="button" class="button" onclick="addGallery()">+ Add image</button></div>
 
 <div class="form-section"><p class="eyebrow">SEO</p><div class="form-grid form-grid--2"><label>SEO title<input name="seo_title" value="{{ old('seo_title',$tour->seo_title) }}"></label><label>SEO image path / URL<input name="seo_image" value="{{ old('seo_image',$tour->seo_image) }}"></label></div><label>SEO description<textarea name="seo_description" rows="4">{{ old('seo_description',$tour->seo_description) }}</textarea></label></div>
 <div class="form-section form-section--inline"><label class="check"><input type="checkbox" name="featured" value="1" @checked(old('featured',$tour->featured))> Featured tour</label><label class="check"><input type="checkbox" name="published" value="1" @checked(old('published',$tour->published))> Published</label></div>

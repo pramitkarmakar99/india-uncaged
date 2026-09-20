@@ -22,7 +22,7 @@ class DashboardController extends Controller
                 'departures' => TourDate::where('published', true)->where('start_date', '>=', today())->count(),
                 'gallery' => GalleryImage::where('published', true)->count(),
                 'journal' => JournalArticle::where('published', true)->count(),
-                'enquiries' => Enquiry::where('status', 'New')->count(),
+                'enquiries' => Enquiry::where('status', 'new')->count(),
             ],
         ]);
     }
