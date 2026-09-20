@@ -9,6 +9,7 @@ use App\Models\Tour;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
@@ -30,6 +31,26 @@ class GalleryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        if ($request->hasFile('images')) {
+            $files=$request->file('images');
+            $base=$request->validate([
+                'images'=>'required|array|max:30','images.*'=>'file|image|mimes:jpg,jpeg,png,webp,avif|max:12288',
+                'category'=>'required|in:tour_experiences,bts,fauna,herping,birds,landscapes',
+                'destination_id'=>'nullable|exists:destinations,id','tour_id'=>'nullable|exists:tours,id',
+                'caption'=>'nullable|string|max:5000','location'=>'nullable|string|max:255','taken_on'=>'nullable|date',
+                'photographer'=>'nullable|string|max:255','featured'=>'nullable|boolean','published'=>'nullable|boolean',
+            ]);
+            foreach($files as $file){
+                $path=$file->store('gallery','public');
+                GalleryImage::create([
+                    'image_path'=>Storage::disk('public')->url($path),'category'=>$base['category'],
+                    'destination_id'=>$base['destination_id']??null,'tour_id'=>$base['tour_id']??null,
+                    'caption'=>$base['caption']??null,'location'=>$base['location']??null,'taken_on'=>$base['taken_on']??null,
+                    'photographer'=>$base['photographer']??null,'featured'=>$request->boolean('featured'),'published'=>$request->boolean('published'),
+                ]);
+            }
+            return redirect()->route('admin.gallery.index')->with('success',count($files).' gallery image(s) added.');
+        }
         $image=new GalleryImage();
         $this->save($request,$image);
         return redirect()->route('admin.gallery.edit',$image)->with('success','Gallery image added.');
