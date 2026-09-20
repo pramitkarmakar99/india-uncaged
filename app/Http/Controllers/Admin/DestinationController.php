@@ -36,7 +36,10 @@ class DestinationController extends Controller
 
     public function edit(Destination $destination): View
     {
-        return view('admin.destinations.form', compact('destination'));
+        return view('admin.destinations.form', [
+            'destination' => $destination->load('galleryImages'),
+            'galleryImages' => \App\Models\GalleryImage::where('published', true)->latest()->get(),
+        ]);
     }
 
     public function update(Request $request, Destination $destination): RedirectResponse
