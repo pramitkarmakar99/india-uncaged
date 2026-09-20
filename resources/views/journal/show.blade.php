@@ -1,5 +1,10 @@
 @extends('layouts.app')
-@section('title',$article->title.' — India Uncaged')
+@section('title', $article->seo_title ?: $article->title.' — India Uncaged')
+@section('description', $article->seo_description ?: $article->excerpt ?: 'Field notes and stories from India Uncaged.')
+@section('og_title', $article->seo_title ?: $article->title.' — India Uncaged')
+@section('og_description', $article->seo_description ?: $article->excerpt ?: 'Field notes and stories from India Uncaged.')
+@section('og_type','article')
+@section('canonical', route('journal.show',$article))
 @section('content')
 <section class="article-hero" style="{{ $article->cover_image ? "background-image:url('".e($article->cover_image)."')" : '' }}"><div><p class="eyebrow">{{ $article->category }}</p><h1>{{ $article->title }}</h1><p>{{ $article->published_at?->format('d M Y') }}{{ $article->author ? ' · '.$article->author : '' }}</p></div></section>
 <article class="article-body"><p class="article-excerpt">{{ $article->excerpt }}</p><div class="article-content">{!! $article->content[0]['value'] ?? '' !!}</div></article>
