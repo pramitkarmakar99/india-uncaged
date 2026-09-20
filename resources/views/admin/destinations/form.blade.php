@@ -40,6 +40,17 @@
 ", $destination->experiences ?? [])) }}</textarea></label>
         </div>
 
+        <div class="form-section"><p class="eyebrow">Gallery</p>
+            <p class="field-help">Select published gallery images to feature on this destination page.</p>
+            <div class="form-grid form-grid--2">
+                @forelse($galleryImages as $image)
+                    <label class="check"><input type="checkbox" name="gallery_ids[]" value="{{ $image->id }}" @checked(in_array($image->id, old('gallery_ids', $destination->galleryImages?->pluck('id')->all() ?? [])))> {{ $image->caption ?: basename(parse_url($image->image_path, PHP_URL_PATH)) }}</label>
+                @empty
+                    <p class="field-help">No published gallery images available yet.</p>
+                @endforelse
+            </div>
+        </div>
+
         <div class="form-section"><p class="eyebrow">SEO</p>
             <div class="form-grid form-grid--2">
                 <label>SEO Title<input name="seo_title" value="{{ old('seo_title', $destination->seo_title) }}"></label>
