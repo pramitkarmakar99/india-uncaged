@@ -75,7 +75,7 @@ class DestinationController extends Controller
             'featured' => ['nullable', 'boolean'],
             'published' => ['nullable', 'boolean'],
             'gallery_ids' => ['nullable', 'array'],
-            'gallery_ids.*' => ['integer', 'exists:gallery_images,id'],
+            'gallery_ids.*' => [\n                'integer',\n                Rule::exists('gallery_images', 'id')->where(fn ($q) => $q->where('published', true)),\n            ],
         ]);
 
         $slug = Str::slug($data['slug'] ?: $data['name']);
