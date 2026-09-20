@@ -15,7 +15,7 @@ class PublicSiteController extends Controller
 {
     public function home(): View
     {
-        $upcoming=TourDate::query()->with(['tour.destination'])->where('published',true)->where('start_date','>=',today())->whereHas('tour',fn($q)=>$q->where('published',true)->whereNull('archived_at'))->orderBy('start_date')->get();
+        $upcoming=TourDate::query()->with(['tour.destination'])->where('published',true)->where('start_date','>=',today())->where('status','!=','completed')->whereHas('tour',fn($q)=>$q->where('published',true)->whereNull('archived_at')->whereHas('destination',fn($d)=>$d->where('published',true)->whereNull('archived_at')))->orderBy('start_date')->get();
         $featured=TourDate::query()->with(['tour.destination'])->where('published',true)->where('start_date','>=',today())->whereHas('tour',fn($q)=>$q->where('published',true)->where('featured',true)->whereNull('archived_at'))->orderBy('start_date')->get();
         $featuredIds=$featured->pluck('id');
         $rest=$upcoming->reject(fn($d)=>$featuredIds->contains($d->id))->shuffle();
@@ -47,7 +47,7 @@ class PublicSiteController extends Controller
     public function destination(Destination $destination): View
     {
         abort_unless($destination->published && !$destination->archived_at,404);
-        $destination->load(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')->with(['dates'=>fn($d)=>$d->where('published',true)->where('start_date','>=',today())->orderBy('start_date')]),'galleryImages'=>fn($q)=>$q->where('published',true)->orderBy('featured','desc')]);
+        $destination->load(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')->with(['dates'=>fn($d)=>$d->where('published',true)->where('start_date','>=',today())->where('status','!=','completed')->orderBy('start_date')]),'galleryImages'=>fn($q)=>$q->where('published',true)->orderBy('featured','desc')]);
         return view('destinations.show', compact('destination'));
     }
 
