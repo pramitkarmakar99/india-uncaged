@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\\Http\\Controllers;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use App\\Models\\User;
+use Illuminate\\Http\\RedirectResponse;
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\Auth;
+use Illuminate\\View\\View;
 
 class AuthController extends Controller
 {
@@ -21,7 +22,9 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $user = \App\Models\User::where('email', $credentials['email'])->whereIn('role', ['owner', 'admin'])->first();
+        $user = User::where('email', $credentials['email'])
+            ->whereIn('role', ['owner', 'admin'])
+            ->first();
 
         if (! $user || ! Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
             return back()->withErrors(['email' => 'The provided credentials are incorrect.'])->onlyInput('email');
