@@ -61,8 +61,18 @@
         <a href="{{ $site::get('instagram_url','https://instagram.com/'.ltrim($site::get('instagram_handle'),'@')) }}" target="_blank" rel="noopener">Instagram</a>
     </div>
 </div>
+<div id="site-lightbox" class="lightbox" hidden>
+    <button type="button" data-lightbox-close aria-label="Close">×</button>
+    <img id="site-lightbox-image" src="" alt="">
+    <p id="site-lightbox-caption"></p>
+</div>
 <script>
 document.addEventListener("DOMContentLoaded",()=>{const h=document.querySelector("[data-site-header]"),b=document.querySelector(".mobile-menu-toggle"),m=document.getElementById("mobile-menu");const sync=()=>h.classList.toggle("is-scrolled",window.scrollY>24);sync();window.addEventListener("scroll",sync,{passive:true});b?.addEventListener("click",e=>{e.preventDefault();const open=!m.hasAttribute("hidden");if(open){m.setAttribute("hidden","");b.setAttribute("aria-expanded","false")}else{m.removeAttribute("hidden");b.setAttribute("aria-expanded","true")}});m?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{m.setAttribute("hidden","");b.setAttribute("aria-expanded","false")}));});
+const lb=document.getElementById("site-lightbox"),lbi=document.getElementById("site-lightbox-image"),lbc=document.getElementById("site-lightbox-caption");
+const closeLb=()=>{if(!lb)return;lb.hidden=true;lbi.src="";document.body.classList.remove("no-scroll")};
+document.querySelectorAll(".js-lightbox").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();lbi.src=a.href;lbi.alt=a.dataset.lightboxAlt||a.querySelector("img")?.alt||"";lbc.textContent=a.dataset.lightboxAlt||"";lb.hidden=false;document.body.classList.add("no-scroll")}));
+lb?.addEventListener("click",e=>{if(e.target===lb||e.target.matches("[data-lightbox-close]"))closeLb()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLb()});
 </script>
 </body>
 </html>
