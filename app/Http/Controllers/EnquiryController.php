@@ -54,6 +54,13 @@ class EnquiryController extends Controller
             'source' => ['nullable','in:contact,plan,tour'],
         ]);
 
+        if (! empty($data['tour_date_id'])) {
+            $date = TourDate::with('tour.destination')->find($data['tour_date_id']);
+            if (! $date || ! $date->tour || ! $date->tour->published || $date->tour->archived_at || ! $date->tour->destination || ! $date->tour->destination->published || $date->tour->destination->archived_at) {
+                return back()->withErrors(['tour_date_id' => 'The selected departure is not available.'])->withInput();
+            }
+        }
+
         if (! empty($data['tour_date_id']) && ! empty($data['tour_id'])) {
             $validDate = \App\\Models\\TourDate::whereKey($data['tour_date_id'])
                 ->where('tour_id', $data['tour_id'])
