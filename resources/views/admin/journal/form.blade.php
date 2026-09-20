@@ -1,0 +1,13 @@
+@extends('layouts.app')
+@section('content')
+<section class="admin-page"><div class="admin-header"><div><p class="eyebrow">CMS / Journal</p><h1>{{ $article->exists ? 'Edit article' : 'New article' }}</h1></div><a class="button" href="{{ route('admin.journal.index') }}">Back</a></div>
+@if(session('success'))<div class="notice">{{ session('success') }}</div>@endif
+@if($errors->any())<div class="notice notice--error"><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+<form method="POST" action="{{ $article->exists ? route('admin.journal.update',$article) : route('admin.journal.store') }}" class="admin-form">@csrf @if($article->exists) @method('PUT') @endif
+<div class="form-section"><p class="eyebrow">Article</p><div class="form-grid form-grid--2"><label>Title<input name="title" value="{{ old('title',$article->title) }}" required></label><label>Slug<input name="slug" value="{{ old('slug',$article->slug) }}"></label><label>Category<input name="category" value="{{ old('category',$article->category) }}" placeholder="Wildlife, Field Notes..."></label><label>Author<input name="author" value="{{ old('author',$article->author) }}"></label><label>Cover image path / URL<input name="cover_image" value="{{ old('cover_image',$article->cover_image) }}"></label></div><label>Excerpt<textarea name="excerpt" rows="4">{{ old('excerpt',$article->excerpt) }}</textarea></label><label>Article content<textarea name="content" rows="22" placeholder="Write the article content here. HTML is preserved in the published article.">{{ old('content',$article->content[0]['value'] ?? '') }}</textarea></label></div>
+<div class="form-section"><p class="eyebrow">SEO</p><div class="form-grid form-grid--2"><label>SEO title<input name="seo_title" value="{{ old('seo_title',$article->seo_title) }}"></label><label>SEO image path / URL<input name="seo_image" value="{{ old('seo_image',$article->seo_image) }}"></label></div><label>SEO description<textarea name="seo_description" rows="4">{{ old('seo_description',$article->seo_description) }}</textarea></label></div>
+<div class="form-section form-section--inline"><label class="check"><input type="checkbox" name="published" value="1" @checked(old('published',$article->published))> Published</label></div>
+<div class="admin-actions"><button class="button button--primary">Save article</button></div></form>
+@if($article->exists)<form method="POST" action="{{ route('admin.journal.destroy',$article) }}" class="danger-form">@csrf @method('DELETE')<button class="button button--danger" onclick="return confirm('Delete this article?')">Delete article</button></form>@endif
+</section>
+@endsection

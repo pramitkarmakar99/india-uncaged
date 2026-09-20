@@ -1,0 +1,56 @@
+<?php
+use App\\Http\\Controllers\\PublicSiteController;
+use App\\Http\\Controllers\\AuthController;
+use App\\Http\\Controllers\\EnquiryController;
+use App\\Http\\Controllers\\JournalController;
+use App\\Http\\Controllers\\Admin\\DashboardController;
+use App\\Http\\Controllers\\Admin\\DestinationController;
+use App\\Http\\Controllers\\Admin\\TourController;
+use App\\Http\\Controllers\\Admin\\TourDateController;
+use App\\Http\\Controllers\\Admin\\SiteSettingController;
+use App\\Http\\Controllers\\Admin\\JournalController;
+use App\\Http\\Controllers\\Admin\\GalleryController;
+use App\\Http\\Controllers\\Admin\\EnquiryController;
+use App\\Http\\Controllers\\Admin\\UserController;
+use Illuminate\\Support\\Facades\\Route;
+
+Route::get('/', [PublicSiteController::class,'home'])->name('home');
+Route::get('/sitemap.xml', [PublicSiteController::class,'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [PublicSiteController::class,'robots'])->name('robots');
+Route::get('/destinations', [PublicSiteController::class,'destinations'])->name('destinations');
+Route::get('/destinations/{destination:slug}', [PublicSiteController::class,'destination'])->name('destinations.show');
+Route::get('/tours', [PublicSiteController::class,'tours'])->name('tours');
+Route::get('/tours/{tour:slug}', [PublicSiteController::class,'tour'])->name('tours.show');
+Route::get('/gallery', [PublicSiteController::class,'gallery'])->name('gallery');
+Route::get('/journal', [JournalController::class,'index'])->name('journal');
+Route::get('/journal/{article:slug}', [JournalController::class,'show'])->name('journal.show');
+Route::view('/about', 'about')->name('about');
+Route::view('/contact', 'contact')->name('contact');
+Route::get('/plan-your-journey', [EnquiryController::class, 'create'])->name('plan');
+Route::post('/plan-your-journey', [EnquiryController::class, 'store'])->middleware('throttle:10,1')->name('plan.store');
+Route::post('/contact', [EnquiryController::class, 'store'])->middleware('throttle:10,1')->name('contact.store');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('destinations', DestinationController::class)->except(['show']);
+    Route::patch('/destinations/{destination}/archive', [DestinationController::class, 'archive'])->name('destinations.archive');
+    Route::resource('tours', TourController::class)->except(['show']);
+    Route::patch('/tours/{tour}/archive', [TourController::class, 'archive'])->name('tours.archive');
+    Route::resource('tour-dates', TourDateController::class)->except(['show']);
+    Route::resource('enquiries', EnquiryController::class)->only(['index','edit','update']);
+    Route::resource('journal', JournalController::class)->except(['show']);
+    Route::resource('gallery', GalleryController::class)->except(['show']);
+    Route::get('/settings', [SiteSettingController::class,'edit'])->name('settings.edit');
+    Route::post('/settings', [SiteSettingController::class,'update'])->name('settings.update');
+    Route::get('/users', [UserController::class,'index'])->name('users.index');
+    Route::post('/users', [UserController::class,'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class,'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class,'destroy'])->name('users.destroy');
+});

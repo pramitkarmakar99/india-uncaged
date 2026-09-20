@@ -1,0 +1,7 @@
+@extends('layouts.app')
+@section('content')
+<section class="admin-page"><div class="admin-header"><div><p class="eyebrow">CMS / Enquiry</p><h1>{{ $enquiry->name }}</h1></div><a class="button" href="{{ route('admin.enquiries.index') }}">Back</a></div>
+@if(session('success'))<div class="notice">{{ session('success') }}</div>@endif
+<div class="enquiry-detail"><div><p><strong>WhatsApp:</strong> {{ $enquiry->whatsapp ?: '—' }}</p><p><strong>Email:</strong> {{ $enquiry->email ?: '—' }}</p><p><strong>Destination:</strong> {{ $enquiry->destination ?: '—' }}</p><p><strong>Tour:</strong> {{ $enquiry->tour?->name ?: '—' }}</p><p><strong>Preferred dates:</strong> {{ $enquiry->preferred_dates ?: '—' }}</p><p><strong>Travellers:</strong> {{ $enquiry->travellers ?: '—' }}</p><p><strong>Budget:</strong> {{ $enquiry->budget ?: '—' }}</p><p><strong>Interests:</strong> {{ $enquiry->interests ? implode(', ',$enquiry->interests) : '—' }}</p><p><strong>Message:</strong><br>{{ $enquiry->message ?: '—' }}</p></div>
+<form method="POST" action="{{ route('admin.enquiries.update',$enquiry) }}" class="admin-form">@csrf @method('PUT')<label>Status<select name="status">@foreach(['new','contacted','quoted','confirmed','completed','closed'] as $status)<option value="{{ $status }}" @selected($enquiry->status===$status)>{{ str($status)->title() }}</option>@endforeach</select></label><label>Internal notes<textarea name="admin_notes" rows="10">{{ $enquiry->admin_notes }}</textarea></label><button class="button button--primary">Save enquiry</button></form></div></section>
+@endsection

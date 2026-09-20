@@ -1,0 +1,8 @@
+@extends('layouts.app')
+@section('content')
+<section class="admin-page"><div class="admin-header"><div><p class="eyebrow">CMS / Users</p><h1>Admin Users</h1><p>Only the owner can grant or revoke admin access.</p></div></div>
+@if(session('success'))<div class="notice">{{ session('success') }}</div>@endif
+<div class="admin-user-layout"><section class="form-section"><p class="eyebrow">Grant admin access</p><form method="POST" action="{{ route('admin.users.store') }}" class="admin-form">@csrf<div class="form-grid form-grid--2"><label>Name<input name="name" required></label><label>Email<input type="email" name="email" required></label><label>Password<input type="password" name="password" minlength="12" required></label><label>Confirm password<input type="password" name="password_confirmation" minlength="12" required></label></div><button class="button button--primary">Create admin</button></form></section>
+<section class="form-section"><p class="eyebrow">Current accounts</p><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead><tbody>@foreach($users as $user)<tr><td>{{ $user->name }}</td><td>{{ $user->email }}</td><td>{{ $user->role }}</td><td>@if($user->isOwner())Owner account protected.@else<form method="POST" action="{{ route('admin.users.destroy',$user) }}">@csrf @method('DELETE')<button class="button" onclick="return confirm('Revoke admin access for this user?')">Revoke</button></form>@endif</td></tr>@endforeach</tbody></table></div></section></div>
+</section>
+@endsection
