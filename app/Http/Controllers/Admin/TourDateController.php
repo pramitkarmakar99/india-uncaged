@@ -66,7 +66,11 @@ class TourDateController extends Controller
             'published' => ['nullable', 'boolean'],
         ]);
 
-        abort_unless(Tour::whereKey($data['tour_id'])->whereNull('archived_at')->exists(), 422, 'The selected tour is archived or invalid.');
+        $tour = Tour::with('destination')->whereKey($data['tour_id'])->whereNull('archived_at')->first();
+        abort_unless($tour, 422, 'The selected tour is archived or invalid.');
+        if ($request->boolean('published') && (! $tour->published || ! $tour->destination?->published)) {
+            abort(422, 'A departure cannot be published while its tour and destination are unpublished.');
+        }
 
         if (($data['total_seats'] ?? null) !== null && ($data['available_seats'] ?? 0) > $data['total_seats']) {
             abort(422, 'Available seats cannot exceed total seats.');
