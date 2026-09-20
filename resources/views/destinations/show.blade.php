@@ -1,5 +1,9 @@
 @extends('layouts.app')
-@section('title',$destination->name.' — India Uncaged')
+@section('title', $destination->seo_title ?: $destination->name.' — India Uncaged')
+@section('description', $destination->seo_description ?: $destination->tagline ?: 'Explore '.$destination->name.' with India Uncaged.')
+@section('og_title', $destination->seo_title ?: $destination->name.' — India Uncaged')
+@section('og_description', $destination->seo_description ?: $destination->tagline ?: 'Explore '.$destination->name.' with India Uncaged.')
+@section('canonical', route('destinations.show',$destination))
 @section('content')
 @php($site=app(\App\Support\SiteSettings::class))
 <section class="detail-hero" style="{{ $destination->hero_image ? "background-image:url('".e($destination->hero_image)."')" : '' }}"><div><p class="eyebrow">{{ $destination->state_region }}</p><h1>{{ $destination->name }}</h1><p>{{ $destination->tagline }}</p></div></section>
