@@ -11,6 +11,7 @@ use App\\Http\\Controllers\\Admin\\SiteSettingController;
 use App\\Http\\Controllers\\Admin\\JournalController;
 use App\\Http\\Controllers\\Admin\\GalleryController;
 use App\\Http\\Controllers\\Admin\\EnquiryController;
+use App\\Http\\Controllers\\Admin\\UserController;
 use Illuminate\\Support\\Facades\\Route;
 
 Route::get('/', [PublicSiteController::class,'home'])->name('home');
@@ -48,4 +49,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('gallery', GalleryController::class)->except(['show']);
     Route::get('/settings', [SiteSettingController::class,'edit'])->name('settings.edit');
     Route::post('/settings', [SiteSettingController::class,'update'])->name('settings.update');
+    Route::get('/users', [UserController::class,'index'])->name('users.index');
+    Route::post('/users', [UserController::class,'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class,'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class,'destroy'])->name('users.destroy');
 });
