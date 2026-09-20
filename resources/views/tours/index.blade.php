@@ -12,5 +12,4 @@
 <section class="tour-list">
 @forelse($dates as $date)<article class="tour-card"><div class="tour-card__image" style="{{ $date->tour?->hero_image ? "background-image:url('".e($date->tour->hero_image)."')" : '' }}"></div><div class="tour-card__body"><p class="eyebrow">{{ $date->tour?->destination?->name }}</p><h2>{{ $date->tour?->name }}</h2><p>{{ $date->tour?->short_description }}</p><div class="tour-card__meta"><span>{{ $date->start_date->format('d M Y') }} — {{ $date->end_date->format('d M Y') }}</span><span>{{ $date->price !== null ? '₹'.number_format($date->price,0) : 'Price on enquiry' }}</span><span>{{ $date->start_date->diffInDays($date->end_date) + 1 }} days / {{ $date->start_date->diffInDays($date->end_date) }} nights</span></div>@if($date->available_seats !== null)<p class="field-help">{{ $date->available_seats }} seats available</p>@endif<a class="button" href="{{ route('tours.show',$date->tour) }}">VIEW TOUR</a></div></article>
 @empty<div class="empty-state"><p class="eyebrow">THE CALENDAR IS QUIET</p><h2>No departures match your filters.</h2><p>Try another combination or plan a private journey.</p><a class="button button--primary" href="{{ route('plan') }}">PLAN YOUR JOURNEY</a></div>@endforelse
-</section></section>
-@endsection
+</section>@endsection
