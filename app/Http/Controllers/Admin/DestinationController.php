@@ -7,6 +7,7 @@ use App\Models\Destination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class DestinationController extends Controller
@@ -68,14 +69,14 @@ class DestinationController extends Controller
             'best_season' => ['nullable', 'string', 'max:255'],
             'best_season_description' => ['nullable', 'string'],
             'experiences' => ['nullable', 'string'],
-            'hero_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
+            'hero_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\/\/|\/storage\/)[^\s]+$/i'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],
-            'seo_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
+            'seo_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\/\/|\/storage\/)[^\s]+$/i'],
             'featured' => ['nullable', 'boolean'],
             'published' => ['nullable', 'boolean'],
             'gallery_ids' => ['nullable', 'array'],
-            'gallery_ids.*' => [\n                'integer',\n                Rule::exists('gallery_images', 'id')->where(fn ($q) => $q->where('published', true)),\n            ],
+            'gallery_ids.*' => ['integer', Rule::exists('gallery_images', 'id')->where('published', true)],
         ]);
 
         $slug = Str::slug($data['slug'] ?: $data['name']);
