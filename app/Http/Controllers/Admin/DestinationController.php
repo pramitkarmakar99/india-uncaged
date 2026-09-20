@@ -62,10 +62,10 @@ class DestinationController extends Controller
             'best_season' => ['nullable', 'string', 'max:255'],
             'best_season_description' => ['nullable', 'string'],
             'experiences' => ['nullable', 'string'],
-            'hero_image' => ['nullable', 'string', 'max:2048'],
+            'hero_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],
-            'seo_image' => ['nullable', 'string', 'max:2048'],
+            'seo_image' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i'],
             'featured' => ['nullable', 'boolean'],
             'published' => ['nullable', 'boolean'],
         ]);
