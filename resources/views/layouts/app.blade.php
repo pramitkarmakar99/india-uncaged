@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css'])
 </head>
 <body>
-<header class="site-header">
+<header class="site-header" data-site-header><a class="mobile-menu-toggle" href="#mobile-menu" aria-controls="mobile-menu" aria-expanded="false">MENU</a>
     <a class="brand" href="{{ route('home') }}">{{ $site::get('horizontal_logo') ? '' : 'INDIA UNCAGED' }}@if($site::get('horizontal_logo'))<img src="{{ $site::get('horizontal_logo') }}" alt="India Uncaged" class="site-logo">@endif</a>
     <nav aria-label="Primary navigation">
         <a href="{{ route('home') }}">Home</a>
@@ -21,7 +21,7 @@
         <a href="{{ route('contact') }}">Contact</a>
     </nav>
     <a class="nav-cta" href="{{ route('plan') }}">PLAN YOUR JOURNEY</a>
-</header>
+<div class="mobile-menu" id="mobile-menu" hidden><div class="mobile-menu__inner"><nav aria-label="Mobile navigation"><a href="{{ route('home') }}">Home</a><a href="{{ route('destinations') }}">Destinations</a><a href="{{ route('tours') }}">Upcoming Tours</a><a href="{{ route('gallery') }}">Gallery</a><a href="{{ route('journal') }}">Journal</a><a href="{{ route('about') }}">About Us</a><a href="{{ route('contact') }}">Contact</a></nav><a class="button button--primary" href="{{ route('plan') }}">PLAN YOUR JOURNEY</a><a class="mobile-menu__whatsapp" href="https://wa.me/{{ preg_replace('/\D/','',$site::get('whatsapp_number')) }}" target="_blank" rel="noopener">WHATSAPP</a></div></div></header>
 
 <main>@yield('content')</main>
 
@@ -39,5 +39,6 @@
         <a href="{{ $site::get('instagram_url','https://instagram.com/'.ltrim($site::get('instagram_handle'),'@')) }}" target="_blank" rel="noopener">Instagram</a>
     </div>
 </div>
+<script>document.addEventListener("DOMContentLoaded",()=>{const h=document.querySelector("[data-site-header]"),b=document.querySelector(".mobile-menu-toggle"),m=document.getElementById("mobile-menu");const sync=()=>h.classList.toggle("is-scrolled",window.scrollY>24);sync();window.addEventListener("scroll",sync,{passive:true});b?.addEventListener("click",e=>{e.preventDefault();const open=!m.hasAttribute("hidden");if(open){m.setAttribute("hidden","");b.setAttribute("aria-expanded","false")}else{m.removeAttribute("hidden");b.setAttribute("aria-expanded","true")}});m?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{m.setAttribute("hidden","");b.setAttribute("aria-expanded","false")}));});</script>
 </body>
 </html>
