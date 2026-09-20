@@ -8,6 +8,8 @@ use App\Models\GalleryImage;
 use App\Models\JournalArticle;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\URL;
 
 class PublicSiteController extends Controller {
  public function home(): View {
@@ -20,6 +22,14 @@ class PublicSiteController extends Controller {
   $journal=JournalArticle::where('published',true)->orderByDesc('published_at')->limit(3)->get();
   return view('home',compact('featured','rest','gallery','destinations','journal'));
  }
+ public function sitemap(): Response {
+  $urls=[['loc'=>URL::to('/'),'lastmod'=>now()],['loc'=>URL::to('/destinations'),'lastmod'=>now()],['loc'=>URL::to('/tours'),'lastmod'=>now()],['loc'=>URL::to('/gallery'),'lastmod'=>now()],['loc'=>URL::to('/journal'),'lastmod'=>now()],['loc'=>URL::to('/about'),'lastmod'=>now()],['loc'=>URL::to('/contact'),'lastmod'=>now()],['loc'=>URL::to('/plan-your-journey'),'lastmod'=>now()]];
+  foreach(Destination::where('published',true)->whereNull('archived_at')->get() as $item) $urls[]=['loc'=>route('destinations.show',$item),'lastmod'=>$item->updated_at];
+  foreach(Tour::where('published',true)->whereNull('archived_at')->get() as $item) $urls[]=['loc'=>route('tours.show',$item),'lastmod'=>$item->updated_at];
+  foreach(JournalArticle::where('published',true)->get() as $item) $urls[]=['loc'=>route('journal.show',$item),'lastmod'=>$item->updated_at];
+  return response()->view('sitemap',compact('urls'))->header('Content-Type','application/xml');
+ }
+ public function robots(): Response { return response("User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nSitemap: ".URL::to('/sitemap.xml')."\n",200,['Content-Type'=>'text/plain']); }
  public function destinations(): View { return view('destinations.index',['destinations'=>Destination::where('published',true)->whereNull('archived_at')->withCount(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')])->orderBy('state_region')->orderBy('name')->get()]); }
  public function destination(Destination $destination): View {
   abort_unless($destination->published && !$destination->archived_at, 404);
