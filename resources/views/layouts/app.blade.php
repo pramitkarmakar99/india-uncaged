@@ -15,7 +15,7 @@
     <meta name="twitter:card" content="summary_large_image">
 @php($site=app(\App\Support\SiteSettings::class))
     <meta name="description" content="@yield('description', 'Premium wildlife journeys across India.')">
-    @vite(['resources/css/app.css'])
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
 <header class="site-header" data-site-header><a class="mobile-menu-toggle" href="#mobile-menu" aria-controls="mobile-menu" aria-expanded="false">MENU</a>
