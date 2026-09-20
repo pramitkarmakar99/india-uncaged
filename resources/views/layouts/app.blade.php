@@ -26,17 +26,17 @@
 <main>@yield('content')</main>
 
 <footer class="site-footer">
-    <div><strong>India Uncaged</strong><br><span>Wildlife journeys, thoughtfully made.</span></div>
+    <div>@if($site::get('square_logo'))<img src="{{ $site::get('square_logo') }}" alt="India Uncaged" class="footer-logo">@else<strong>India Uncaged</strong>@endif<br><span>Wildlife journeys, thoughtfully made.</span></div>
     <div>{{ $site::get('contact_email') }}</div>
 </footer>
 
 <div class="contact-widget" aria-label="India Uncaged contact options">
-    <a class="contact-widget__whatsapp" href="https://wa.me/{{ $site::get('whatsapp_number') }}" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="contact-widget__whatsapp" href="https://wa.me/{{ preg_replace('/\D/','',$site::get('whatsapp_number')) }}" target="_blank" rel="noopener">WhatsApp</a>
     <div class="contact-widget__panel">
-        <a href="tel:+91{{ $site::get('phone_primary') }}">Call {{ config('indiauncaged.phone_primary') }}</a>
-        <a href="tel:+91{{ $site::get('phone_secondary') }}">Call {{ $site::get('phone_secondary') }}</a>
-        <a href="mailto:{{ config('indiauncaged.contact_email') }}">Email us</a>
-        <a href="https://instagram.com/{{ ltrim(config('indiauncaged.instagram_handle'), '@') }}" target="_blank" rel="noopener">Instagram</a>
+        <a href="tel:{{ preg_replace('/\D/','',$site::get('phone_primary')) }}">Call {{ $site::get('phone_primary') }}</a>
+        <a href="tel:{{ preg_replace('/\D/','',$site::get('phone_secondary')) }}">Call {{ $site::get('phone_secondary') }}</a>
+        <a href="mailto:{{ $site::get('contact_email') }}">Email us</a>
+        <a href="{{ $site::get('instagram_url','https://instagram.com/'.ltrim($site::get('instagram_handle'),'@')) }}" target="_blank" rel="noopener">Instagram</a>
     </div>
 </div>
 </body>
