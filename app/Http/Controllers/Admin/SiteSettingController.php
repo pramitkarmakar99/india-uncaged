@@ -11,7 +11,7 @@ use Illuminate\View\View;
 class SiteSettingController extends Controller
 {
     private array $groups = [
-        'contact'=>['whatsapp_number','phone_primary','phone_secondary','contact_email','instagram_handle','instagram_url','facebook_url','youtube_url'],
+        'contact'=>['whatsapp_number','phone_primary','phone_secondary','contact_email','instagram_handle','instagram_url','facebook_url','youtube_url','google_maps_url'],
         'branding'=>['horizontal_logo','square_logo','favicon','social_preview','default_seo_image'],
         'hero'=>['hero_video','hero_poster','hero_headline','hero_subheadline','hero_primary_label','hero_primary_url','hero_secondary_label','hero_secondary_url'],
         'social'=>['instagram_embed_code'],
@@ -21,10 +21,10 @@ class SiteSettingController extends Controller
     public function edit(): View
     {
         $defaults=[
-            'whatsapp_number'=>config('indiauncaged.whatsapp'),
-            'phone_primary'=>config('indiauncaged.phone'),
+            'whatsapp_number'=>config('indiauncaged.whatsapp_number'),
+            'phone_primary'=>config('indiauncaged.phone_primary'),
             'phone_secondary'=>config('indiauncaged.phone_secondary'),
-            'contact_email'=>config('indiauncaged.email'),
+            'contact_email'=>config('indiauncaged.contact_email'),
             'instagram_handle'=>config('indiauncaged.instagram_handle'),
         ];
         $settings=SiteSetting::pluck('value','key')->all();
