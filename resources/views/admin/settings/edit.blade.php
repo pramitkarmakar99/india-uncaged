@@ -13,6 +13,7 @@
 <label>Instagram URL<input name="instagram_url" value="{{ old('instagram_url',$settings['instagram_url'] ?? '') }}"></label>
 <label>Facebook URL<input name="facebook_url" value="{{ old('facebook_url',$settings['facebook_url'] ?? '') }}"></label>
 <label>YouTube URL<input name="youtube_url" value="{{ old('youtube_url',$settings['youtube_url'] ?? '') }}"></label>
+<label>Google Maps link<input name="google_maps_url" value="{{ old('google_maps_url',$settings['google_maps_url'] ?? '') }}"></label>
 </div></div>
 <div class="form-section"><p class="eyebrow">Branding</p><div class="form-grid form-grid--2">
 <label>Horizontal logo path / URL<input name="horizontal_logo" value="{{ old('horizontal_logo',$settings['horizontal_logo'] ?? '') }}"></label>
