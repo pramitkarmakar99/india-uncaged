@@ -4,8 +4,7 @@
   "description": "India Uncaged wildlife travel website.",
   "require": {
     "php": "^8.2",
-    "laravel/framework": "^12.0",
-    "laravel/socialite": "^5.23"
+    "laravel/framework": "^12.0"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",
