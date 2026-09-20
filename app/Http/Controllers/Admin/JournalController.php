@@ -25,7 +25,7 @@ class JournalController extends Controller
             'excerpt'=>['nullable','string','max:2000'],'cover_image'=>['nullable','string','max:2048','regex:/^(https?:\/\/|\/storage\/)[^\s]+$/i'],'author'=>['nullable','string','max:255'],
             'seo_image'=>['nullable','string','max:2048','regex:/^(https?:\/\/|\/storage\/)[^\s]+$/i'],
             'content'=>['nullable','string'],'seo_title'=>['nullable','string','max:255'],'seo_description'=>['nullable','string'],
-            'seo_image'=>['nullable','string','max:2048'],'published'=>['nullable','boolean'],
+            'published'=>['nullable','boolean'],
         ]);
         $slug=Str::slug($data['slug'] ?: $data['title']);
         if(JournalArticle::where('slug',$slug)->whereKeyNot($article->id ?? 0)->exists()) $slug.='-'.Str::lower(Str::random(5));
