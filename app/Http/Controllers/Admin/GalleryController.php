@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\\Http\\Controllers\\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Destination;
-use App\Models\GalleryImage;
-use App\Models\Tour;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
+use App\\Http\\Controllers\\Controller;
+use App\\Models\\Destination;
+use App\\Models\\GalleryImage;
+use App\\Models\\Tour;
+use Illuminate\\Http\\RedirectResponse;
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\Storage;
+use Illuminate\\View\\View;
 
 class GalleryController extends Controller
 {
@@ -32,28 +32,47 @@ class GalleryController extends Controller
     public function store(Request $request): RedirectResponse
     {
         if ($request->hasFile('images')) {
-            $files=$request->file('images');
-            $base=$request->validate([
-                'images'=>'required|array|max:30','images.*'=>'file|image|mimes:jpg,jpeg,png,webp,avif|max:12288',
-                'category'=>'required|in:tour_experiences,bts,fauna,herping,birds,landscapes',
-                'destination_id'=>'nullable|exists:destinations,id','tour_id'=>'nullable|exists:tours,id',
-                'caption'=>'nullable|string|max:5000','location'=>'nullable|string|max:255','taken_on'=>'nullable|date',
-                'photographer'=>'nullable|string|max:255','featured'=>'nullable|boolean','published'=>'nullable|boolean',
+            $base = $request->validate([
+                'images' => ['required','array','max:30'],
+                'images.*' => ['file','image','mimes:jpg,jpeg,png,webp,avif','max:12288'],
+                'category' => ['required','in:tour_experiences,bts,fauna,herping,birds,landscapes'],
+                'destination_id' => ['nullable','exists:destinations,id'],
+                'tour_id' => ['nullable','exists:tours,id'],
+                'caption' => ['nullable','string','max:5000'],
+                'location' => ['nullable','string','max:255'],
+                'taken_on' => ['nullable','date'],
+                'photographer' => ['nullable','string','max:255'],
+                'featured' => ['nullable','boolean'],
+                'published' => ['nullable','boolean'],
             ]);
-            foreach($files as $file){
-                $path=$file->store('gallery','public');
+
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('gallery', 'public');
+                [$width, $height] = getimagesize($file->getRealPath()) ?: [null, null];
+
                 GalleryImage::create([
-                    'image_path'=>Storage::disk('public')->url($path),'category'=>$base['category'],
-                    'destination_id'=>$base['destination_id']??null,'tour_id'=>$base['tour_id']??null,
-                    'caption'=>$base['caption']??null,'location'=>$base['location']??null,'taken_on'=>$base['taken_on']??null,
-                    'photographer'=>$base['photographer']??null,'featured'=>$request->boolean('featured'),'published'=>$request->boolean('published'),
+                    'image_path' => Storage::disk('public')->url($path),
+                    'category' => $base['category'],
+                    'destination_id' => $base['destination_id'] ?? null,
+                    'tour_id' => $base['tour_id'] ?? null,
+                    'caption' => $base['caption'] ?? null,
+                    'location' => $base['location'] ?? null,
+                    'taken_on' => $base['taken_on'] ?? null,
+                    'photographer' => $base['photographer'] ?? null,
+                    'width' => $width,
+                    'height' => $height,
+                    'featured' => $request->boolean('featured'),
+                    'published' => $request->boolean('published'),
                 ]);
             }
-            return redirect()->route('admin.gallery.index')->with('success',count($files).' gallery image(s) added.');
+
+            return redirect()->route('admin.gallery.index')->with('success', count($request->file('images')).' gallery image(s) added.');
         }
-        $image=new GalleryImage();
-        $this->save($request,$image);
-        return redirect()->route('admin.gallery.edit',$image)->with('success','Gallery image added.');
+
+        $image = new GalleryImage();
+        $this->save($request, $image);
+
+        return redirect()->route('admin.gallery.edit', $image)->with('success','Gallery image added.');
     }
 
     public function edit(GalleryImage $gallery): View
@@ -80,7 +99,10 @@ class GalleryController extends Controller
     private function save(Request $request, GalleryImage $image): void
     {
         $data=$request->validate([
-            'image_path'=>['required','string','max:2048'],
+            'image_path'=>[
+                'required','string','max:2048',
+                'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i',
+            ],
             'category'=>['required','in:tour_experiences,bts,fauna,herping,birds,landscapes'],
             'destination_id'=>['nullable','exists:destinations,id'],
             'tour_id'=>['nullable','exists:tours,id'],
