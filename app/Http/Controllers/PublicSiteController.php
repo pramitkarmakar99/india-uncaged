@@ -23,7 +23,7 @@ class PublicSiteController extends Controller {
  public function destinations(): View { return view('destinations.index',['destinations'=>Destination::where('published',true)->whereNull('archived_at')->withCount(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')])->orderBy('state_region')->orderBy('name')->get()]); }
  public function destination(Destination $destination): View {
   abort_unless($destination->published && !$destination->archived_at, 404);
-  $destination->load(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')->with(['dates'=>fn($d)=>$d->where('published',true)->where('start_date','>=',today())->orderBy('start_date')])]);
+  $destination->load(['tours'=>fn($q)=>$q->where('published',true)->whereNull('archived_at')->with(['dates'=>fn($d)=>$d->where('published',true)->where('start_date','>=',today())->orderBy('start_date')]),'galleryImages'=>fn($q)=>$q->where('published',true)->orderBy('featured','desc')]);
   return view('destinations.show', compact('destination'));
  }
  public function gallery(Request $request): View {
