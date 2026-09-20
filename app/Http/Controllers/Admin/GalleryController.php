@@ -38,6 +38,8 @@ class GalleryController extends Controller
                 'category' => ['required','in:tour_experiences,bts,fauna,herping,birds,landscapes'],
                 'destination_id' => ['nullable','exists:destinations,id'],
                 'tour_id' => ['nullable','exists:tours,id'],
+                'gallery_ids' => ['nullable','array'],
+                'gallery_ids.*' => ['integer','exists:gallery_images,id'],
                 'caption' => ['nullable','string','max:5000'],
                 'location' => ['nullable','string','max:255'],
                 'taken_on' => ['nullable','date'],
