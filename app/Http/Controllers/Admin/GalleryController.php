@@ -1,15 +1,15 @@
 <?php
 
-namespace App\\Http\\Controllers\\Admin;
+namespace App\Http\Controllers\Admin;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Destination;
-use App\\Models\\GalleryImage;
-use App\\Models\\Tour;
-use Illuminate\\Http\\RedirectResponse;
-use Illuminate\\Http\\Request;
-use Illuminate\\Support\\Facades\\Storage;
-use Illuminate\\View\\View;
+use App\Http\Controllers\Controller;
+use App\Models\Destination;
+use App\Models\GalleryImage;
+use App\Models\Tour;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class GalleryController extends Controller
 {
@@ -101,7 +101,7 @@ class GalleryController extends Controller
         $data=$request->validate([
             'image_path'=>[
                 'required','string','max:2048',
-                'regex:/^(https?:\\/\\/|\\/storage\\/)[^\\s]+$/i',
+                'regex:/^(https?:\/\/|\/storage\/)[^\s]+$/i',
             ],
             'category'=>['required','in:tour_experiences,bts,fauna,herping,birds,landscapes'],
             'destination_id'=>['nullable','exists:destinations,id'],
