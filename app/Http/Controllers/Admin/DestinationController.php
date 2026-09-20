@@ -7,7 +7,6 @@ use App\Models\Destination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class DestinationController extends Controller
@@ -76,7 +75,7 @@ class DestinationController extends Controller
             'featured' => ['nullable', 'boolean'],
             'published' => ['nullable', 'boolean'],
             'gallery_ids' => ['nullable', 'array'],
-            'gallery_ids.*' => ['integer', Rule::exists('gallery_images', 'id')->where('published', true)],
+            'gallery_ids.*' => ['integer', 'exists:gallery_images,id'],
         ]);
 
         $slug = Str::slug($data['slug'] ?: $data['name']);
