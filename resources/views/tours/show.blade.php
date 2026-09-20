@@ -1,15 +1,13 @@
 @extends('layouts.app')
 @section('title',$tour->name.' — India Uncaged')
 @section('content')
+@php($site=app(\App\Support\SiteSettings::class))
 <section class="detail-hero" style="{{ $tour->hero_image ? "background-image:url('".e($tour->hero_image)."')" : '' }}"><div><p class="eyebrow">{{ $tour->destination->name }}</p><h1>{{ $tour->name }}</h1><p>{{ $tour->short_description }}</p></div></section>
-<section class="detail-content">
-<div class="detail-main"><p class="eyebrow">THE JOURNEY</p><div class="rich-copy">{!! nl2br(e($tour->description)) !!}</div>
-@if($tour->why_visit)<p class="eyebrow">WHY THIS JOURNEY</p><div class="rich-copy">{!! nl2br(e($tour->why_visit)) !!}</div>@endif
+@if($tour->images->count())<section class="tour-gallery">@foreach($tour->images as $image)<figure><img src="{{ $image->image_path }}" alt="{{ $image->caption ?: $tour->name }}" loading="lazy">@if($image->caption)<figcaption>{{ $image->caption }}</figcaption>@endif</figure>@endforeach</section>@endif
+<section class="detail-content"><div class="detail-main"><p class="eyebrow">THE JOURNEY</p><div class="rich-copy">{!! nl2br(e($tour->description)) !!}</div>@if($tour->why_visit)<p class="eyebrow">WHY THIS JOURNEY</p><div class="rich-copy">{!! nl2br(e($tour->why_visit)) !!}</div>@endif
 @if($tour->best_time)<div class="detail-block"><p class="eyebrow">BEST TIME</p><p>{!! nl2br(e($tour->best_time)) !!}</p></div>@endif
 @if($tour->itineraryDays->count())<div class="detail-block"><p class="eyebrow">ITINERARY</p><div class="itinerary">@foreach($tour->itineraryDays as $day)<article><strong>DAY {{ $day->day_number }}</strong><h3>{{ $day->title }}</h3><p>{!! nl2br(e($day->description)) !!}</p></article>@endforeach</div></div>@endif
 @if($tour->inclusions->count())<div class="detail-block"><p class="eyebrow">INCLUSIONS</p><ul>@foreach($tour->inclusions as $item)<li>{{ $item->text }}</li>@endforeach</ul></div>@endif
-@if($tour->exclusions->count())<div class="detail-block"><p class="eyebrow">EXCLUSIONS</p><ul>@foreach($tour->exclusions as $item)<li>{{ $item->text }}</li>@endforeach</ul></div>@endif
-</div>
-<aside class="detail-aside"><p class="eyebrow">UPCOMING DEPARTURES</p>@forelse($tour->dates as $date)<div class="departure"><strong>{{ $date->start_date->format('d M Y') }} — {{ $date->end_date->format('d M Y') }}</strong><span>{{ $date->price !== null ? '₹'.number_format($date->price,0) : 'Price on enquiry' }}</span><span>{{ str($date->status)->replace('_',' ')->title() }} @if($date->available_seats !== null) · {{ $date->available_seats }} seats @endif</span></div>@empty<p>No published departures currently.</p>@endforelse<a class="button button--primary" href="{{ route('plan',['tour'=>$tour->slug]) }}">ENQUIRE ABOUT THIS TOUR</a><a class="button" target="_blank" rel="noopener" href="https://wa.me/{{ config('indiauncaged.whatsapp_number') }}?text={{ urlencode("Hi, I'm interested in the '".$tour->name."' trip and would like to have more details about it.") }}">WHATSAPP</a></aside>
-</section>
+@if($tour->exclusions->count())<div class="detail-block"><p class="eyebrow">EXCLUSIONS</p><ul>@foreach($tour->exclusions as $item)<li>{{ $item->text }}</li>@endforeach</ul></div>@endif</div>
+<aside class="detail-aside"><p class="eyebrow">UPCOMING DEPARTURES</p>@forelse($tour->dates as $date)<div class="departure"><strong>{{ $date->start_date->format('d M Y') }} — {{ $date->end_date->format('d M Y') }}</strong><span>{{ $date->price !== null ? '₹'.number_format($date->price,0) : 'Price on enquiry' }}</span><span>{{ str($date->status)->replace('_',' ')->title() }} @if($date->available_seats !== null) · {{ $date->available_seats }} seats @endif</span></div>@empty<p>No published departures currently.</p>@endforelse<a class="button button--primary" href="{{ route('plan',['tour'=>$tour->slug]) }}">ENQUIRE ABOUT THIS TOUR</a><a class="button" target="_blank" rel="noopener" href="https://wa.me/{{ preg_replace('/\D/','',$site::get('whatsapp_number')) }}?text={{ urlencode("Hi, I'm interested in the '".$tour->name."' trip and would like to have more details about it.") }}">WHATSAPP</a></aside></section>
 @endsection
