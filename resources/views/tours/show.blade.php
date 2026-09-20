@@ -1,5 +1,9 @@
 @extends('layouts.app')
-@section('title',$tour->name.' — India Uncaged')
+@section('title', $tour->seo_title ?: $tour->name.' — India Uncaged')
+@section('description', $tour->seo_description ?: $tour->short_description ?: 'Wildlife journey with India Uncaged.')
+@section('og_title', $tour->seo_title ?: $tour->name.' — India Uncaged')
+@section('og_description', $tour->seo_description ?: $tour->short_description ?: 'Wildlife journey with India Uncaged.')
+@section('canonical', route('tours.show',$tour))
 @section('content')
 @php($site=app(\App\Support\SiteSettings::class))
 <section class="detail-hero" style="{{ $tour->hero_image ? "background-image:url('".e($tour->hero_image)."')" : '' }}"><div><p class="eyebrow">{{ $tour->destination->name }}</p><h1>{{ $tour->name }}</h1><p>{{ $tour->short_description }}</p></div></section>
