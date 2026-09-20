@@ -5,6 +5,7 @@ namespace App\\Http\\Controllers;
 use App\\Models\\Destination;
 use App\\Models\\Enquiry;
 use App\\Models\\Tour;
+use App\\Models\\TourDate;
 use Illuminate\\Http\\RedirectResponse;
 use Illuminate\\Http\\Request;
 use Illuminate\\View\\View;
@@ -49,20 +50,29 @@ class EnquiryController extends Controller
             ],
             'tour_date_id' => [
                 'nullable',
-                Rule::exists('tour_dates', 'id')->where(fn ($q) => $q->where('published', true)->where('start_date', '>=', now()->toDateString())),
+                Rule::exists('tour_dates', 'id')->where(fn ($q) => $q->where('published', true)->where('start_date', '>=', today())->where('status', '!=', 'completed')),
             ],
             'source' => ['nullable','in:contact,plan,tour'],
         ]);
 
         if (! empty($data['tour_date_id'])) {
             $date = TourDate::with('tour.destination')->find($data['tour_date_id']);
-            if (! $date || ! $date->tour || ! $date->tour->published || $date->tour->archived_at || ! $date->tour->destination || ! $date->tour->destination->published || $date->tour->destination->archived_at) {
+            if (
+                ! $date ||
+                ! $date->tour ||
+                ! $date->tour->published ||
+                $date->tour->archived_at ||
+                ! $date->tour->destination ||
+                ! $date->tour->destination->published ||
+                $date->tour->destination->archived_at ||
+                $date->status === 'completed'
+            ) {
                 return back()->withErrors(['tour_date_id' => 'The selected departure is not available.'])->withInput();
             }
         }
 
         if (! empty($data['tour_date_id']) && ! empty($data['tour_id'])) {
-            $validDate = \App\\Models\\TourDate::whereKey($data['tour_date_id'])
+            $validDate = TourDate::whereKey($data['tour_date_id'])
                 ->where('tour_id', $data['tour_id'])
                 ->exists();
 
