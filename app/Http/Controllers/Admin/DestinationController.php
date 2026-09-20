@@ -20,7 +20,10 @@ class DestinationController extends Controller
 
     public function create(): View
     {
-        return view('admin.destinations.form', ['destination' => new Destination()]);
+        return view('admin.destinations.form', [
+            'destination' => new Destination(),
+            'galleryImages' => \App\Models\GalleryImage::where('published', true)->latest()->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
